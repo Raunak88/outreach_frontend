@@ -1,0 +1,156 @@
+<!-- header -->
+<app-header></app-header>
+
+<!-- body  start-->
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" *ngIf="this.currentUser.role != 'Contributor'">
+  <button type="button" class="btn btn-outline-primary my-2 my-sm-0" (click)="addCampaign()">Add campaign</button>
+</div>
+
+<div class="container">
+
+  <div class="row">
+
+    <!--Filter section-->
+    <div class="filter-section col-sm-12 col-md-3">
+      <a href="javascript:void(0)" (click) = "clearAll()">Clear all</a>
+      <h6 class="">Filter by amount</h6>
+      <ul class="list-unstyled">
+        <li>
+          <div>
+            <label>
+              <input class="mr-2" type="radio" name="price" value="5000" [(ngModel)]="price" >
+              <span>below 5000/-</span>
+            </label>
+          </div>
+        </li>
+        <li>
+          <div>
+            <label>
+              <input class="mr-2" type="radio" name="price" value="10000" [(ngModel)]="price">
+              <span>5001/- to 10000/-</span>
+            </label>
+          </div>
+        </li>
+        <li>
+          <div>
+            <label>
+              <input class="mr-2" type="radio" name="price" [(ngModel)]="price" value="15000">
+              <span>10001/- to 15000/-</span>
+            </label>
+          </div>
+        </li>
+        <li>
+          <div>
+            <label>
+              <input class="mr-2" type="radio" name="price" value="20000" [(ngModel)]="price">
+              <span>15001/- to 20000/</span>
+            </label>
+          </div>
+        </li>
+        <li>
+          <div>
+            <label>
+              <input class="mr-2" type="radio" name="price" value="20001" [(ngModel)]="price" >
+              <span>above 20000/-</span>
+            </label>
+          </div>
+        </li>
+      </ul>
+      <h6 class="">Filter by State</h6>
+      <select class="custom-select" id="state" [(ngModel)]="category_state"  name="state"
+        #state="ngModel">
+          <option *ngFor="let state of states" [value]="state" >{{state}}</option>
+      </select>
+      <h6 class="">Filter by Category</h6>
+      <select class="form-control custom-select" id="type" [(ngModel)]="campaign_category"  name="category"
+      #category="ngModel">
+        <option *ngFor="let category of categories" [value]="category" >{{category}}</option>
+    </select>
+    </div>
+
+    <div class="borrower-section col-sm-12 col-md-9">     
+
+      <img *ngIf="loading" class="pl-2" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+      />
+
+      <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+
+      <div class="card mb-3" *ngFor="let camp of camps |  paginate: { itemsPerPage: 10, currentPage: p } | personSearch: price:category_state:campaign_category">
+        <div class="row no-gutters">
+          <div class="col-md-4 borrower-img">
+            <img id="blah" class="card-img ml-md-3"  [src]="camp.borrower.image_url" alt="Image" />
+          </div>
+          <div class="col-md-8">
+            <div class="card-body ">             
+              <h5 class="card-title">
+                  {{camp.campaign_name}} for  {{camp.borrower.firstname}} {{camp.borrower.lastname}}                
+              </h5>  
+              <p class="card-text">{{camp.campaign_description}}</p>            
+              <p class="card-text">
+                  <i class="fas fa-tags mr-1"></i>campaign category: {{camp.campaign_category}}
+                <br>
+                <i class="fas fa-compass mr-1"></i>campaign location: {{camp.borrower.city}},{{camp.borrower.state}}
+              </p>
+
+              <form class="form-inline" (ngSubmit)="submit(camp,content)"  *ngIf="this.currentUser.role != 'Creator'">
+                  <div class="form-group mr-sm-3 mb-2">
+                    <label for="inputPassword2" class="sr-only">Enter Amount to contribute</label>
+                    <input type="number" min="0" class="form-control" name="submission" [(ngModel)]="camp.contribution" placeholder="Enter Amount">
+                    <button type="submit" class="btn btn-outline-primary ml-2 my-2 my-sm-0">Contribute</button>
+                  </div>
+                  
+                </form>
+                           
+              <h6 class="card-text text-info">
+                  Amount needed: {{camp.contribution_amount}}
+              </h6>
+              <p class="card-text text-danger">
+                  Funds needed by: {{camp.contribution_enddate | date :'short'}}
+                </p>
+             
+              <p class="card-text">
+               <i class="fas fa-users mr-1"></i>Total Contributors: {{camp.contribution_details.length}}
+              </p>
+              <!-- <p class="card-text">
+                  <small class="text-muted">Total Contributors</small>
+                  <small class="text-muted">Loan</small>
+                </p>                -->
+              
+              <div class="control-section"  *ngIf="this.currentUser.role != 'Contributor'">
+                  <p class="card-text">
+                      <small class="text-muted">Campaign submitted on: {{camp.creation_date | date :'short'}}</small>
+                    </p>
+              <button type="button" class="btn btn-default btn-sm" (click)="delete(camp)">
+                  <i class="fas fa-trash-alt"></i> Delete
+                </button>
+                <button type="button" class="btn btn-default btn-sm" (click)="edit(camp)">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pagination-controls autoHide="true" responsive="true" (pageChange)="p = $event" class="text-center"></pagination-controls>
+    </div>
+  </div>
+</div>
+
+<!-- body end -->
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title text-success ">Payment successful</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body text-center text-success">
+    <p>Thanks a lot for your contributions</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>
+<!-- footer -->
+<app-footer></app-footer>

@@ -1,0 +1,172 @@
+
+<!-- header -->
+<app-header></app-header>
+<!-- body  start-->
+  <div class="container">
+
+      <h1 class="h3 mb-3 font-weight-normal">Add campaign</h1>
+
+    <div class="row">
+      <div class="col-md-4 py-5 bg-primary text-white text-center ">
+          <div class=" ">
+              <div class="card-body">
+                  <img src="../../assets/images/registration_bg.svg" style="width:30%">
+                  <h2 class="py-3">Create campaign</h2>
+                  <ul>
+                    <li>Firstname is mandatory</li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-8 py-5 border mx-auto ">
+        
+        <h4 class="pb-4 text-center">Please fill with borrower details</h4>        
+        <form class="needs-validation" (ngSubmit)="submitted ? f.form.valid && onEdit(content) :f.form.valid && onSubmit(content)" #f="ngForm" novalidate>
+            <div class="col-md-6 form-group mx-auto">
+              <div class="text-center form-group">
+              <img id="blah" class="text-center" [src]="imageSrc" alt="Image" />
+              </div>
+              <div class="custom-file">
+                  <input #imageInput
+                  class="custom-file-input" id="customFile"
+                  type="file"
+                  accept="image/*"
+                  (change)="processFile(imageInput)">
+                  <label class="custom-file-label" for="customFile">Choose image for upload</label>
+                  
+                </div>  
+              </div>      
+                
+            <div class="col-md-6 form-group mx-auto">
+                  <label for="inputfName" class="sr-only">First Name</label>
+                  <input type="text" id="fName" class="form-control" placeholder="First Name" name="fName" [(ngModel)]="campModel.borrower.firstname" #fName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && fName.invalid }" required autofocus>
+                  <div *ngIf="f.submitted && fName.invalid" class="invalid-feedback">
+                  <div *ngIf="fName.errors.required">First Name is required</div>                  
+                  </div>
+                  
+                  
+                  
+            </div>         
+            <div class=" col-md-6 form-group mx-auto">
+                  <label for="inputlName" class="sr-only">Last Name</label>
+                  <input type="text" id="lName" class="form-control" placeholder="Last Name" name="lName" [(ngModel)]="campModel.borrower.lastname" #lName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && lName.invalid }" required pattern="^[A-Za-z -]+$">
+                  <div *ngIf="f.submitted && lName.invalid" class="invalid-feedback">
+                  <div *ngIf="lName.errors.required">Last Name is required</div>
+                  <div *ngIf="lName.errors?.pattern">Last Name should only have alphabets</div>
+                  </div>
+            </div>
+            <div class="col-md-6 form-group mx-auto">
+                    <label for="inputAge" class="sr-only">Age</label>
+                    <input type="number" min='0' id="age" class="form-control" placeholder="Age" name="age" [(ngModel)]="campModel.borrower.age" #age="ngModel" [ngClass]="{ 'is-invalid': f.submitted && age.invalid }" required>
+                    <div *ngIf="f.submitted && age.invalid" class="invalid-feedback">
+                    <div *ngIf="age.errors.required">Age is required</div>
+                    </div>
+            </div>
+            <div class="col-md-6 form-group mx-auto">
+                <label for="inputBio" class="sr-only">Bio</label>
+                <textarea id="bio" class="form-control" placeholder="Bio" name="bio" [(ngModel)]="campModel.borrower.bio" #bio="ngModel" [ngClass]="{ 'is-invalid': f.submitted && bio.invalid }" required></textarea>
+                <div *ngIf="f.submitted && bio.invalid" class="invalid-feedback">
+                <div *ngIf="bio.errors.required">Bio is required</div>
+                </div>
+                
+              </div>
+            <div class="col-md-6 form-group mx-auto">
+                    <label for="inputCity" class="sr-only">City</label>
+                    <input type="text" id="city" class="form-control" placeholder="City" name="city" [(ngModel)]="campModel.borrower.city" #city="ngModel" [ngClass]="{ 'is-invalid': f.submitted && city.invalid }" required pattern="^[A-Za-z -]+$">
+                    <div *ngIf="f.submitted && city.invalid" class="invalid-feedback">
+                    <div *ngIf="city.errors.required">City is required</div>
+                    <div *ngIf="city.errors?.pattern">City should only have alphabets</div>
+                    </div>
+            </div>
+            <div class="col-md-6 form-group mx-auto">
+                <label for="role">State</label>
+                <label for="inputState" class="sr-only">State</label>
+                <select class="form-control custom-select" id="state" [(ngModel)]="campModel.borrower.state"  name="state"
+                  #state="ngModel" >
+                    <option *ngFor="let state of states" [value]="state" >{{state}}</option>
+                </select>
+                <!-- <input type="text" id="state" class="form-control" placeholder="State" name="state" [(ngModel)]="campModel.borrower.state" #state="ngModel" [ngClass]="{ 'is-invalid': f.submitted && state.invalid }" required>
+                <div *ngIf="f.submitted && state.invalid" class="invalid-feedback">
+                  <div *ngIf="state.errors.required">State is required</div>
+                </div> -->
+              </div>
+              <div class="col-md-6 form-group mx-auto">
+                  <label for="inputPin" class="sr-only">Pin Code</label>
+                  <input type="number" min='0' id="pin" class="form-control" placeholder="Pin Code" name="pin" [(ngModel)]="campModel.borrower.pin" #pin="ngModel" [ngClass]="{ 'is-invalid': f.submitted && pin.invalid }" required>
+                  <div *ngIf="f.submitted && pin.invalid" class="invalid-feedback">
+                  <div *ngIf="pin.errors.required">pin is required</div>
+                  </div>
+              </div>  
+                                
+
+            <div class="col-md-6  form-group mx-auto">
+                <label for="inputCmpName" class="sr-only">Campaign Name</label>
+                <input type="text" id="CmpName" class="form-control" placeholder="Campaign Name" name="CmpName" [(ngModel)]="campModel.campaign_name" #CmpName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && CmpName.invalid }" required>
+                <div *ngIf="f.submitted && CmpName.invalid" class="invalid-feedback">
+                <div *ngIf="CmpName.errors.required">Campaign Name is required</div>
+                </div>
+              </div>
+            <div class="col-md-6 form-group mx-auto">
+                <label for="inputCmpDesc" class="sr-only">Campaign Description</label>
+                <textarea id="CmpDesc" class="form-control" placeholder="Campaign Description" name="Campaign Description" [(ngModel)]="campModel.campaign_description" #CmpDesc="ngModel" [ngClass]="{ 'is-invalid': f.submitted && CmpDesc.invalid }" required></textarea>
+                <div *ngIf="f.submitted && CmpDesc.invalid" class="invalid-feedback">
+                <div *ngIf="CmpDesc.errors.required">Campaign Description is required</div>
+                </div>
+            </div>
+            <div class="col-md-6 form-group mx-auto">
+                <label for="role">Campaign Category</label>
+                <select class="form-control custom-select" id="type" [(ngModel)]="campModel.campaign_category"  name="category"
+                  #category="ngModel" >
+                <option *ngFor="let category of categories" [value]="category" >{{category}}</option>
+                </select>
+            </div>
+            <div class="col-md-6 form-group mx-auto">
+                <label for="role">Campaign End Date</label>
+                <label for="inputEndDate" class="sr-only">Campaign End Date</label>
+                <input type="date" id="EndDate" class="form-control" placeholder="Contribution Enddate" name="EndDate" [(ngModel)]="campModel.contribution_enddate" #EndDate="ngModel" [ngClass]="{ 'is-invalid': f.submitted && EndDate.invalid }" required>
+                <div *ngIf="f.submitted && EndDate.invalid" class="invalid-feedback">
+                <div *ngIf="EndDate.errors.required">Contribution Enddate is required</div>
+                </div>
+                
+            </div>
+            
+            <div class="col-md-6 form-group mx-auto">
+              <label for="inputAmount" class="sr-only">Amount required</label>
+              <input type="number" min='0' id="amount" class="form-control" placeholder="Amount required(INR)" name="amount" [(ngModel)]="campModel.contribution_amount" #amount="ngModel" [ngClass]="{ 'is-invalid': f.submitted && amount.invalid }" required>
+              <div *ngIf="f.submitted && amount.invalid" class="invalid-feedback">
+                <div *ngIf="amount.errors.required">Amount is required</div>
+              </div>
+            </div>
+            
+            <div class="col-md-6 form-group mx-auto">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+            <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+            </div>
+    </form>
+  
+  </div>
+  </div>
+</div>
+  
+
+  <!-- body end -->
+
+
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title text-success">Campaign created successfully</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body text-center text-success">
+      <p>Details successfully submitted</p>      
+      <br>
+      <p>Redirecting you to dashboard.......</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    </div>
+  </ng-template>
+<!-- footer -->
+<app-footer></app-footer>
